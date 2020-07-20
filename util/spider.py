@@ -525,8 +525,12 @@ def mul_thread_run(func, result_name=''):
     result_final = []
     for one_result in results:
         result_final += one_result
-    pickle.dump(result_final,
-                open(PATH_UNIVERSITY + func.__name__ + '_' + result_name + '.pkl', 'wb'))
+    if result_name == '':
+        pickle.dump(result_final,
+                    open(PATH_UNIVERSITY + func.__name__ + '_' + result_name + '.pkl', 'wb'))
+    else:
+        pickle.dump(result_final,
+                    open(PATH_UNIVERSITY + func.__name__ + '.pkl', 'wb'))
 
 
 def main():
@@ -537,7 +541,6 @@ def main():
     mul_thread_run(spider_all_major_score)
     mul_thread_run(spider_major_list)
     mul_thread_run(spider_all_major_detail)
-
 
 
 if __name__ == '__main__':
@@ -552,7 +555,6 @@ if __name__ == '__main__':
     # get_university_index()
     # spider_all_major_list()
     # get_university_major_score()
-
 
     # get_cookie('17310541754','715253pkPK')
 
