@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from multiprocessing.dummy import Pool as ThreadPool
+import threadpool
 import pandas as pd
 import numpy as np
 import itertools
@@ -360,8 +361,9 @@ def spider_all_major_detail(inter):
 
 
 def spider_all_university_index(inter):
+    print(inter)
     sp = SpiderData()
-    list_university = sp.get_university()[inter[0]:inter[1]]
+    list_university = sp.get_university()[0:inter]
     result_f = []
     kargs = {}
     for i, one_data in enumerate(list_university):
@@ -513,7 +515,7 @@ class SpiderData(object):
             exit()
 
 
-def mul_thread_run(func, result_name=''):
+def mul_processor_run(func, result_name=''):
     pool = ThreadPool()
     args = []
     for i in range(8):
@@ -533,18 +535,54 @@ def mul_thread_run(func, result_name=''):
                     open(PATH_UNIVERSITY + func.__name__ + '.pkl', 'wb'))
 
 
+
+def mul_thread_run(func, result_name=''):
+
+    args = []
+
+    for i in range(8):
+        args.append((int(2800 / 8 * i), int(2800 / 8 * (i + 1))))
+    print(args)
+
+
+    pool = threadpool.ThreadPool(8)
+    reqs = threadpool.makeRequests(func, [300,300,300])
+    [pool.putRequest(req) for req in reqs]
+    pool.wait()
+
+
+    # for i in range(8):
+    #     args.append((int(2800 / 8 * i), int(2800 / 8 * (i + 1))))
+    # print(args)
+    # results = pool.map(func, args)
+    # pool.close()
+    # pool.join()
+    # result_final = []
+    # for one_result in results:
+    #     result_final += one_result
+    # if result_name == '':
+    #     pickle.dump(result_final,
+    #                 open(PATH_UNIVERSITY + func.__name__ + '_' + result_name + '.pkl', 'wb'))
+    # else:
+    #     pickle.dump(result_final,
+    #                 open(PATH_UNIVERSITY + func.__name__ + '.pkl', 'wb'))
+
+
 def main():
     # spider_all_university()
-    print('爬虫 spider_all_university_index')
+    # print('爬虫 spider_all_university_index')
+    # mul_thread_run(spider_all_university_index)
+    # print('爬虫 spider_all_school_score')
+    # mul_thread_run(spider_all_school_score)
+    # print('爬虫 spider_all_major_score')
+    # mul_thread_run(spider_all_major_score)
+    # print('爬虫 spider_major_list')
+    # mul_thread_run(spider_major_list)
+    # print('爬虫 spider_all_major_detail')
+    # mul_thread_run(spider_all_major_detail)
+
+    # thread
     mul_thread_run(spider_all_university_index)
-    print('爬虫 spider_all_school_score')
-    mul_thread_run(spider_all_school_score)
-    print('爬虫 spider_all_major_score')
-    mul_thread_run(spider_all_major_score)
-    print('爬虫 spider_major_list')
-    mul_thread_run(spider_major_list)
-    print('爬虫 spider_all_major_detail')
-    mul_thread_run(spider_all_major_detail)
 
 
 if __name__ == '__main__':
