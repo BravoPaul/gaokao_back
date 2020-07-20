@@ -315,18 +315,18 @@ def spider_all_major_score(inter):
     return result_f
 
 
-def spider_all_major_list():
-    result_f = []
-    for one_diploma_id in ('5', '7'):
-        one_index = {}
-        one_index['diploma_id'] = one_diploma_id
-        result = download_major_list(
-            'https://www.wmzy.com/gw/api/sku/sku_service/major_info_all?diploma_id=' + one_diploma_id + '', **one_index)
-        one_index['result'] = result
-        result_f.append(one_index)
-    pickle.dump(result_f,
-                open(PATH_UNIVERSITY + 'major_list' + '.pkl', 'wb'))
-    return result_f
+# def spider_all_major_list():
+#     result_f = []
+#     for one_diploma_id in ('5', '7'):
+#         one_index = {}
+#         one_index['diploma_id'] = one_diploma_id
+#         result = download_major_list(
+#             'https://www.wmzy.com/gw/api/sku/sku_service/major_info_all?diploma_id=' + one_diploma_id + '', **one_index)
+#         one_index['result'] = result
+#         result_f.append(one_index)
+#     pickle.dump(result_f,
+#                 open(PATH_UNIVERSITY + 'major_list' + '.pkl', 'wb'))
+#     return result_f
 
 
 def spider_all_major_detail(inter):
@@ -531,7 +531,12 @@ def mul_thread_run(func, result_name=''):
 
 def main():
     # spider_all_university()
-    mul_thread_run(spider_all_university_index)
+    # mul_thread_run(spider_all_university_index)
+
+    mul_thread_run(spider_all_school_score)
+    mul_thread_run(spider_all_major_score)
+    mul_thread_run(spider_major_list)
+    mul_thread_run(spider_all_major_detail)
 
 
 
