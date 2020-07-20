@@ -530,8 +530,8 @@ def mul_thread_run(func, result_name=''):
 
 
 def main():
-    spider_all_university()
-    # mul_thread_run(spider_all_university_index)
+    # spider_all_university()
+    mul_thread_run(spider_all_university_index)
 
 
 
