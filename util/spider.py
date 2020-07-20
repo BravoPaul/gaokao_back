@@ -400,7 +400,7 @@ def spider_major_list(inter):
 class SpiderData(object):
 
     def __init__(self):
-        self.basic_path = '/Users/kunyue/project_personal/my_project/score_traitor/data/data_spider/'
+        self.basic_path = '../data/data_spider/'
 
     def __search_print(self, data, university=None):
         result = []
