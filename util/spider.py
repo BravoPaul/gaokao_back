@@ -114,6 +114,7 @@ def download_page_university_detail(url, **kargs):
             print('进度：:', kargs['page_num'])
         return result
     else:
+        print(soup.text)
         raise ValueError()
 
 
