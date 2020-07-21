@@ -316,18 +316,18 @@ def spider_all_major_score(inter):
     return result_f
 
 
-# def spider_all_major_list():
-#     result_f = []
-#     for one_diploma_id in ('5', '7'):
-#         one_index = {}
-#         one_index['diploma_id'] = one_diploma_id
-#         result = download_major_list(
-#             'https://www.wmzy.com/gw/api/sku/sku_service/major_info_all?diploma_id=' + one_diploma_id + '', **one_index)
-#         one_index['result'] = result
-#         result_f.append(one_index)
-#     pickle.dump(result_f,
-#                 open(PATH_UNIVERSITY + 'major_list' + '.pkl', 'wb'))
-#     return result_f
+def spider_all_major_list():
+    result_f = []
+    for one_diploma_id in ('5', '7'):
+        one_index = {}
+        one_index['diploma_id'] = one_diploma_id
+        result = download_major_list(
+            'https://www.wmzy.com/gw/api/sku/sku_service/major_info_all?diploma_id=' + one_diploma_id + '', **one_index)
+        one_index['result'] = result
+        result_f.append(one_index)
+    pickle.dump(result_f,
+                open(PATH_UNIVERSITY + 'spider_all_major_list' + '.pkl', 'wb'))
+    return result_f
 
 
 def spider_all_major_detail(inter):
@@ -383,18 +383,6 @@ def spider_all_university_detail(inter):
     for i, one_data in enumerate(list_university):
         id = one_data['sch_id']
         result = download_page_university_detail('https://www.wmzy.com/web/school?type=1&sch_id=' + id, i)
-        result_f.append({'sch_id': id, 'result': result})
-    return result_f
-
-
-def spider_major_list(inter):
-    sp = SpiderData()
-    list_university = sp.get_university()[inter[0]:inter[1]]
-    result_f = []
-    kargs = {}
-    for i, one_data in enumerate(list_university):
-        id = one_data['sch_id']
-        result = download_major_list('https://www.wmzy.com/web/major/list', i)
         result_f.append({'sch_id': id, 'result': result})
     return result_f
 
@@ -495,7 +483,7 @@ class SpiderData(object):
 
     def get_university_all_major(self, major=None):
         data = pickle.load(open(
-            self.basic_path + 'spider_all_major_detail_.pkl', "rb"))
+            self.basic_path + 'spider_all_major_list.pkl', "rb"))
         if major is None:
             result = json.dumps(data, sort_keys=True, ensure_ascii=False, indent=4, separators=(',', ':'))
         else:
@@ -586,15 +574,20 @@ def mul_thread_run(func):
 
 def main():
     # thread
+    # 学校和分数类爬虫
     # mul_thread_run(spider_all_university_index)
-    print('爬虫 spider_all_school_score')
-    mul_thread_run(spider_all_school_score)
-    print('爬虫 spider_all_major_score')
-    mul_thread_run(spider_all_major_score)
+    # print('爬虫 spider_all_school_score')
+    # mul_thread_run(spider_all_school_score)
+    # print('爬虫 spider_all_major_score')
+    # mul_thread_run(spider_all_major_score)
+
+    # 专业类爬虫
     print('爬虫 spider_major_list')
-    mul_thread_run(spider_major_list)
+    spider_all_major_list()
     print('爬虫 spider_all_major_detail')
     mul_thread_run(spider_all_major_detail)
+
+
 
     # mul_processor_run(spider_all_university_index)
 
