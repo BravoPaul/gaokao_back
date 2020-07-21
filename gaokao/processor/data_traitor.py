@@ -257,7 +257,7 @@ class DataTraitor(object):
 
         dataframe_list = {}
         # walk会返回3个参数，分别是路径，目录list，文件list，你可以按需修改下
-        for f, _, i in walk('/Users/kunyue/project_personal/my_project/mysite/data/score_rank'):
+        for f, _, i in walk('data/score_rank'):
             for j in i:
                 if j.find('2016') >= 0:
                     dataframe_list['2016'] = pd.read_excel(f + '/' + j)
@@ -296,7 +296,7 @@ class DataTraitor(object):
                 data_args_1['rank_cum'] = 0 if math.isnan(row['rank_lk_cum']) else row['rank_lk_cum']
 
                 new_education = GaokaoMetaRank(**data_args_1)
-                new_education.save()
+                # new_education.save()
 
     def gaokao_score_line(self):
         from gaokao.models import GaokaoMetaScoreLine, SchoolScore
@@ -886,10 +886,13 @@ class DataTraitor(object):
 
 print('执行了么')
 dt = DataTraitor()
-dt.university_save_sqlite()
-# dt.university_score_sqlite()
-# dt.university_major_sqlite()
-# dt.gaokao_meta_rank()
-# dt.gaokao_score_line()
-# dt.gaokao_recall_score()
-# dt.score_major_split()
+dt.university_detail_sqlite()
+dt.university_score_sqlite()
+dt.university_major_sqlite()
+dt.university_schoollist_sqlite()
+dt.gaokao_meta_rank()
+dt.gaokao_score_line()
+dt.gaokao_recall_score()
+dt.major_career_detail()
+dt.major_split()
+dt.score_major_split()
