@@ -149,7 +149,6 @@ def download_major_detial(url, **kargs):
         cookie_jar.set(c['name'], c['value'], domain="wmzy.com")
     page = requests.get(url, cookies=cookie_jar, headers=newHeaders, json=payload)
     soup = BeautifulSoup(page.text, 'html.parser', from_encoding='utf-8')
-    print(soup.getText())
     site_json = json.loads(soup.text)
     result = site_json['data']
     print('进度：:', kargs['page_num'])
