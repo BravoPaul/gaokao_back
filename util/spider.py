@@ -80,7 +80,7 @@ def download_page_university(url, page_num):
     return result
 
 
-# //详情页
+# //详情页爬虫
 def download_page_university_detail(url, **kargs):
     cookies = pickle.load(open("cookies.pkl", "rb"))
     newHeaders = {'Accept': 'application/json'
