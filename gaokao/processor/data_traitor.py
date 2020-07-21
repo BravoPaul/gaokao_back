@@ -7,7 +7,7 @@
 class DataTraitor(object):
     def __init__(self):
         import sqlite3
-        self.basic_path = '../../data/'
+        self.basic_path = '../../data/data_spider/'
         self.conn = sqlite3.connect("../../db.sqlite3")
         self.cur = self.conn.cursor()
 
