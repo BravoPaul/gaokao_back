@@ -432,7 +432,7 @@ class SpiderData(object):
 
     def get_university_index(self, university=None, university_name=None):
         data = pickle.load(open(
-            self.basic_path + 'spider_all_university_index_.pkl', "rb"))
+            self.basic_path + 'spider_all_university_index.pkl', "rb"))
         print('长度为：', len(data))
         if university is not None or university_name is not None:
             id = university if university is not None else self.get_university_by_name(university_name)
@@ -586,7 +586,7 @@ def mul_thread_run(func):
 
 def main():
     # thread
-    mul_thread_run(spider_all_university_index)
+    # mul_thread_run(spider_all_university_index)
     print('爬虫 spider_all_school_score')
     mul_thread_run(spider_all_school_score)
     print('爬虫 spider_all_major_score')
