@@ -103,7 +103,7 @@ def download_page_university_detail(url, **kargs):
         "sch_id": kargs['sch_id']}
     for c in cookies:
         cookie_jar.set(c['name'], c['value'], domain="wmzy.com")
-    page = requests.get(url, cookies=cookie_jar, headers=newHeaders, json=payload)
+    page = requests.get(url, cookies=cookie_jar,  json=payload)
     soup = BeautifulSoup(page.text, 'html.parser', from_encoding='utf-8')
     soup_done_index = soup.text.find('{"props')
     if soup_done_index!=-1:
