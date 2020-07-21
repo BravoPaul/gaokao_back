@@ -7,7 +7,7 @@
 class DataTraitor(object):
     def __init__(self):
         import sqlite3
-        self.basic_path = '/Users/kunyue/project_personal/my_project/mysite/data/'
+        self.basic_path = '../../data/'
         self.conn = sqlite3.connect("../../db.sqlite3")
         self.cur = self.conn.cursor()
 
@@ -883,9 +883,10 @@ class DataTraitor(object):
 
 print('执行了么')
 dt = DataTraitor()
+dt.university_save_sqlite()
 # dt.university_score_sqlite()
 # dt.university_major_sqlite()
 # dt.gaokao_meta_rank()
 # dt.gaokao_score_line()
 # dt.gaokao_recall_score()
-dt.score_major_split()
+# dt.score_major_split()
