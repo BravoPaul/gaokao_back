@@ -80,18 +80,41 @@ def download_page_university(url, page_num):
     return result
 
 
-# //列表页
-def download_page_university_detail(url, page_num):
+# //详情页
+def download_page_university_detail(url, **kargs):
     cookies = pickle.load(open("cookies.pkl", "rb"))
+    newHeaders = {'Accept': 'application/json'
+        , 'Accept-Encoding': 'gzip, deflate, br'
+        , 'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
+        , 'Authorization': '4147430 Fqag82U0gf2JqIN8bJfzptWQLX4zX1hwqpao4VJRFjLhwYGpQrLe9W862e0R62+6'
+        , 'Channel': 'www.wmzy.com pc'
+        , 'Connection': 'keep-alive'
+        , 'Content-Type': 'application/json'
+        , 'Host': 'www.wmzy.com'
+        , 'Referer': 'https://www.wmzy.com/web/school?sch_id=' + kargs['sch_id'] + '&tab=0'
+        , 'Sec-Fetch-Dest': 'empty'
+        , 'Sec-Fetch-Mode': 'cors'
+        , 'Sec-Fetch-Site': 'same-origin'
+        ,
+                  'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36'
+        , 'x-requested-with': 'XMLHttpRequest'}
     cookie_jar = RequestsCookieJar()
+    payload = {
+        "sch_id": kargs['sch_id']}
     for c in cookies:
         cookie_jar.set(c['name'], c['value'], domain="wmzy.com")
-    page = requests.get(url, cookies=cookie_jar)
+    page = requests.get(url, cookies=cookie_jar, headers=newHeaders, json=payload)
     soup = BeautifulSoup(page.text, 'html.parser', from_encoding='utf-8')
-    site_json = json.loads(soup.text)
-    result = site_json['props']['pageProps']['schoolInfor']
-    print('进度：:', page_num)
-    return result
+    soup_done_index = soup.text.find('{"props')
+    if soup_done_index!=-1:
+        soup_done = soup.text[soup_done_index:]
+        site_json = json.loads(soup_done)
+        result = site_json['props']['pageProps']['schoolInfor']
+        if int(kargs['page_num'])%100==0:
+            print('进度：:', kargs['page_num'])
+        return result
+    else:
+        print(soup.text)
 
 
 # //列表页
@@ -381,7 +404,10 @@ def spider_all_university_detail(inter):
     kargs = {}
     for i, one_data in enumerate(list_university):
         id = one_data['sch_id']
-        result = download_page_university_detail('https://www.wmzy.com/web/school?type=1&sch_id=' + id, i)
+        one_data['page_num'] = i
+        result = download_page_university_detail(
+            'https://www.wmzy.com/web/school?sch_id=' + id+'&tab=0',
+            **one_data)
         result_f.append({'sch_id': id, 'result': result})
     return result_f
 
@@ -587,8 +613,6 @@ def main():
     # spider_all_major_list()
     # print('爬虫 spider_all_major_detail')
     # mul_thread_run(spider_all_major_detail)
-
-
 
     # mul_processor_run(spider_all_university_index)
 
