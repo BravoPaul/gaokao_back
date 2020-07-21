@@ -12,7 +12,7 @@ from multiprocessing.dummy import Pool as ThreadPool
 import threadpool
 import pandas as pd
 import numpy as np
-import itertools
+import time
 
 PATH_UNIVERSITY = '../data/data_spider/'
 
@@ -363,7 +363,7 @@ def spider_all_major_detail(inter):
 def spider_all_university_index(inter):
     print(inter)
     sp = SpiderData()
-    list_university = sp.get_university()[0:inter]
+    list_university = sp.get_university()[inter[0]:inter[1]]
     result_f = []
     kargs = {}
     for i, one_data in enumerate(list_university):
@@ -432,12 +432,30 @@ class SpiderData(object):
 
     def get_university_index(self, university=None, university_name=None):
         data = pickle.load(open(
-            self.basic_path + 'spider_all_university_index.pkl', "rb"))
+            self.basic_path + 'spider_all_university_index_.pkl', "rb"))
         print('长度为：', len(data))
         if university is not None or university_name is not None:
             id = university if university is not None else self.get_university_by_name(university_name)
             return self.__search_print(data, id)
         return data
+
+    # def get_university_index_compare(self, university=None, university_name=None):
+    #     data = pickle.load(open(
+    #         self.basic_path + 'spider_all_university_index.pkl', "rb"))
+    #     print('长度为：', len(data))
+    #     if university is not None or university_name is not None:
+    #         id = university if university is not None else self.get_university_by_name(university_name)
+    #         self.__search_print(data, id)
+    #
+    #     print('分界线-----------------')
+    #     data = pickle.load(open(
+    #         '/Users/kunyue/project_personal/my_project/gaokao_back/data/data_spider/spider_all_university_index_new.pkl',
+    #         "rb"))
+    #     print('长度为：', len(data))
+    #     if university is not None or university_name is not None:
+    #         id = university if university is not None else self.get_university_by_name(university_name)
+    #         self.__search_print(data, id)
+    #     return data
 
     def get_university_score(self, university=None, university_name=None):
         data = pickle.load(open(
@@ -515,80 +533,78 @@ class SpiderData(object):
             exit()
 
 
-def mul_processor_run(func, result_name=''):
+def mul_processor_run(func):
     pool = ThreadPool()
     args = []
     for i in range(8):
         args.append((int(2800 / 8 * i), int(2800 / 8 * (i + 1))))
     print(args)
+    start_time = time.time()
+
     results = pool.map(func, args)
     pool.close()
     pool.join()
+
+    end_time = time.time()
+
+    print((end_time - start_time))
+
     result_final = []
     for one_result in results:
         result_final += one_result
-    if result_name == '':
-        pickle.dump(result_final,
-                    open(PATH_UNIVERSITY + func.__name__ + '_' + result_name + '.pkl', 'wb'))
-    else:
-        pickle.dump(result_final,
-                    open(PATH_UNIVERSITY + func.__name__ + '.pkl', 'wb'))
+    pickle.dump(result_final, open(PATH_UNIVERSITY + func.__name__ + '_new.pkl', 'wb'))
 
 
+def mul_thread_run(func):
+    results = []
 
-def mul_thread_run(func, result_name=''):
+    def get_result(request, result):
+        results.append(result)
 
     args = []
 
     for i in range(8):
-        args.append((int(2800 / 8 * i), int(2800 / 8 * (i + 1))))
+        args_dict = [(int(2800 / 8 * i), int(2800 / 8 * (i + 1)))]
+        args.append((args_dict, None))
     print(args)
 
-
+    start_time = time.time()
     pool = threadpool.ThreadPool(8)
-    reqs = threadpool.makeRequests(func, [300,300,300])
+    reqs = threadpool.makeRequests(func, args, get_result)
     [pool.putRequest(req) for req in reqs]
     pool.wait()
 
+    end_time = time.time()
 
-    # for i in range(8):
-    #     args.append((int(2800 / 8 * i), int(2800 / 8 * (i + 1))))
-    # print(args)
-    # results = pool.map(func, args)
-    # pool.close()
-    # pool.join()
-    # result_final = []
-    # for one_result in results:
-    #     result_final += one_result
-    # if result_name == '':
-    #     pickle.dump(result_final,
-    #                 open(PATH_UNIVERSITY + func.__name__ + '_' + result_name + '.pkl', 'wb'))
-    # else:
-    #     pickle.dump(result_final,
-    #                 open(PATH_UNIVERSITY + func.__name__ + '.pkl', 'wb'))
+    print((end_time - start_time))
+    result_final = []
+    for one_result in results:
+        result_final += one_result
+
+    pickle.dump(result_final, open(PATH_UNIVERSITY + func.__name__ + '.pkl', 'wb'))
 
 
 def main():
-    # spider_all_university()
-    # print('爬虫 spider_all_university_index')
-    # mul_thread_run(spider_all_university_index)
-    # print('爬虫 spider_all_school_score')
-    # mul_thread_run(spider_all_school_score)
-    # print('爬虫 spider_all_major_score')
-    # mul_thread_run(spider_all_major_score)
-    # print('爬虫 spider_major_list')
-    # mul_thread_run(spider_major_list)
-    # print('爬虫 spider_all_major_detail')
-    # mul_thread_run(spider_all_major_detail)
-
     # thread
     mul_thread_run(spider_all_university_index)
+    print('爬虫 spider_all_school_score')
+    mul_thread_run(spider_all_school_score)
+    print('爬虫 spider_all_major_score')
+    mul_thread_run(spider_all_major_score)
+    print('爬虫 spider_major_list')
+    mul_thread_run(spider_major_list)
+    print('爬虫 spider_all_major_detail')
+    mul_thread_run(spider_all_major_detail)
+
+    # mul_processor_run(spider_all_university_index)
 
 
 if __name__ == '__main__':
     main()
     # sp = SpiderData()
-    # data = sp.get_university_score(university_name='济南大学')
+    # data = sp.get_university_index_compare(university_name='青岛滨海学院')
+
+    # get_university_index(university_name='河北科技大学')
 
     #
     #
