@@ -575,16 +575,18 @@ def main():
     # thread
     # 学校和分数类爬虫
     # mul_thread_run(spider_all_university_index)
+    # print('爬虫 spider_all_university_detail')
+    mul_thread_run(spider_all_university_detail)
     # print('爬虫 spider_all_school_score')
     # mul_thread_run(spider_all_school_score)
     # print('爬虫 spider_all_major_score')
     # mul_thread_run(spider_all_major_score)
 
     # 专业类爬虫
-    print('爬虫 spider_major_list')
-    spider_all_major_list()
-    print('爬虫 spider_all_major_detail')
-    mul_thread_run(spider_all_major_detail)
+    # print('爬虫 spider_major_list')
+    # spider_all_major_list()
+    # print('爬虫 spider_all_major_detail')
+    # mul_thread_run(spider_all_major_detail)
 
 
 

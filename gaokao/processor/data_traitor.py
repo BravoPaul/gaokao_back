@@ -107,7 +107,7 @@ class DataTraitor(object):
     def university_major_sqlite(self):
         import pickle
         from gaokao.models import School, SchoolMajor
-        data_origin = pickle.load(open(self.basic_path + 'spider_all_major_score_new.pkl', "rb"))
+        data_origin = pickle.load(open(self.basic_path + 'spider_all_major_score.pkl', "rb"))
         print('正在执行')
         for sch_detail in data_origin:
             try:
