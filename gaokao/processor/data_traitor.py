@@ -4,10 +4,13 @@
 
 # python manage.py shell < /Users/kunyue/project_personal/my_project/mysite/gaokao/processor/data_traitor.py
 
+
 class DataTraitor(object):
     def __init__(self):
         import sqlite3
-        self.basic_path = '../../data/data_spider/'
+        import os
+        print(os.getcwd())
+        self.basic_path = 'data/data_spider/'
         self.conn = sqlite3.connect("../../db.sqlite3")
         self.cur = self.conn.cursor()
 
