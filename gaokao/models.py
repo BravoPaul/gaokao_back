@@ -31,7 +31,7 @@ class School(models.Model):
 class SchoolList(models.Model):
     condition = models.CharField(max_length=200, default='')
     school = models.ForeignKey(School, on_delete=models.CASCADE)
-
+#
 
 class SchoolDetail(models.Model):
     school = models.ForeignKey(School, on_delete=models.CASCADE)
@@ -51,10 +51,10 @@ class SchoolRank(models.Model):
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     rank_type_desc = models.CharField(max_length=200, null=True, blank=True)
     rank_year = models.IntegerField(null=True, blank=True)
-    rank_idx = models.IntegerField(null=True, blank=True)
-    rank_score = models.FloatField(null=True, blank=True)
+    rank_idx = models.CharField(max_length=200,null=True, blank=True)
+    rank_score = models.CharField(max_length=200,null=True, blank=True)
     rank_type = models.CharField(max_length=200, null=True, blank=True)
-    world_rank_idx = models.IntegerField(null=True, blank=True)
+    world_rank_idx = models.CharField(max_length=200,null=True, blank=True)
 
 
 class SchoolFamous(models.Model):

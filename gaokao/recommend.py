@@ -35,7 +35,11 @@ class Recommend(object):
         score_3 = GaokaoMetaScoreLine.objects.filter(province_id=province_id, wenli=wenli, academic_year=year,
                                                      batch_name='高职专科批')[0].school_line
 
-        rank_g = GaokaoMetaRank.objects.filter(province_id=province_id, wenli=wenli, academic_year=year, score=score)[0]
+        print(province_id)
+        print(wenli)
+        print(year)
+        print(int(score))
+        rank_g = GaokaoMetaRank.objects.filter(province_id=province_id, wenli=wenli, academic_year=year, score=int(score))[0]
         score_rank = rank_g.rank_cum
 
         result = {'本科第一批': score - score_1, '本科第二批': score - score_2, '高职专科批': score - score_3}, score_rank

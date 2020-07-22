@@ -296,7 +296,7 @@ class DataTraitor(object):
                 data_args_1['rank_cum'] = 0 if math.isnan(row['rank_lk_cum']) else row['rank_lk_cum']
 
                 new_education = GaokaoMetaRank(**data_args_1)
-                # new_education.save()
+                new_education.save()
 
     def gaokao_score_line(self):
         from gaokao.models import GaokaoMetaScoreLine, SchoolScore
@@ -443,7 +443,7 @@ class DataTraitor(object):
     def major_career_detail(self):
         from gaokao.models import Major, Career
         import pickle
-        data_origin = pickle.load(open(self.basic_path + 'spider_all_major_detail_.pkl', "rb"))
+        data_origin = pickle.load(open(self.basic_path + 'spider_all_major_detail.pkl', "rb"))
         print('正在执行')
         for major_detail in data_origin:
             kargs = {}
@@ -886,23 +886,25 @@ class DataTraitor(object):
 
 print('执行了么')
 dt = DataTraitor()
-print('正在执行：  university_detail_sqlite')
-dt.university_detail_sqlite()
-print('正在执行：  niversity_score_sqlite')
-dt.university_score_sqlite()
-print('正在执行：  niversity_major_sqlite')
-dt.university_major_sqlite()
-print('正在执行：  niversity_schoollist_sqlite')
-dt.university_schoollist_sqlite()
-print('正在执行：  aokao_meta_rank')
-dt.gaokao_meta_rank()
+# print('正在执行：  university')
+# dt.university_save_sqlite()
+# print('正在执行：  university_detail_sqlite')
+# dt.university_detail_sqlite()
+# print('正在执行：  niversity_score_sqlite')
+# dt.university_score_sqlite()
+# print('正在执行：  niversity_major_sqlite')
+# dt.university_major_sqlite()
+# print('正在执行：  niversity_schoollist_sqlite')
+# dt.university_schoollist_sqlite()
+print('正在执行：  gaokao_meta_rank')
+# dt.gaokao_meta_rank()
 print('正在执行：  aokao_score_line')
 dt.gaokao_score_line()
-print('正在执行：  aokao_recall_score')
-dt.gaokao_recall_score()
-print('正在执行：  ajor_career_detail')
-dt.major_career_detail()
-print('正在执行：  ajor_split')
-dt.major_split()
-print('正在执行：  core_major_split')
-dt.score_major_split()
+# print('正在执行：  aokao_recall_score')
+# dt.gaokao_recall_score()
+# print('正在执行：  ajor_career_detail')
+# dt.major_career_detail()
+# print('正在执行：  ajor_split')
+# dt.major_split()
+# print('正在执行：  core_major_split')
+# dt.score_major_split()
