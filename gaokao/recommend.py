@@ -274,7 +274,7 @@ class Recommend(object):
 
         return result
 
-    def recallRank(self, province_id, wenli, score):
+    def recallRank(self, province_id, wenli, rank):
         '''
         召回分为3种，肯定能上的，肯定不能上的和不确定的，打分的意义在于给不确定的打分
         :param province_id:
@@ -282,4 +282,12 @@ class Recommend(object):
         :param score:
         :return:
         '''
+        recall_data = GaokaoRecallRank.objects.filter(
+            province_id=province_id,
+            wenli=wenli
+        )
+
+
+
+
         return 1

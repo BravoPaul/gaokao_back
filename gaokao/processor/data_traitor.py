@@ -375,7 +375,7 @@ class DataTraitor(object):
                         'min_score_rank': min_score_rank,
                         'avg_score_rank': avg_score_rank
                     })
-                    data_t = data_o[data_o['academic_year'] != '2019']
+                    data_t = data_o[data_o['academic_year'] != '2020']
                     data_t = data_t[data_t['max_score_diff'] != -1]
                     data_t = data_t[data_t['min_score_diff'] != -1]
                     data_t = data_t[data_t['avg_score_diff'] != -1]
@@ -419,7 +419,7 @@ class DataTraitor(object):
                     df_min = data_grp_1[['sch_id', 'min_score_rank', 'avg_score_rank']].droplevel(0, axis=1).rename(
                         columns={'': 'sch_id'}).sort_values(by=['mean'])
 
-                    for rank in set(df_max['min'].values.tolist()):
+                    for rank in set(df_min['max'].values.tolist()):
                         sch_max = df_max[df_max['min'] >= rank]['sch_id'].values.tolist()
                         sch_min = df_min[df_min['max'] < rank]['sch_id'].values.tolist()
                         all_school = set(df_max['sch_id'].values.tolist())
@@ -896,12 +896,12 @@ dt = DataTraitor()
 # dt.university_major_sqlite()
 # print('正在执行：  niversity_schoollist_sqlite')
 # dt.university_schoollist_sqlite()
-print('正在执行：  gaokao_meta_rank')
+# print('正在执行：  gaokao_meta_rank')
 # dt.gaokao_meta_rank()
-print('正在执行：  aokao_score_line')
-dt.gaokao_score_line()
+# print('正在执行：  aokao_score_line')
+# dt.gaokao_score_line()
 # print('正在执行：  aokao_recall_score')
-# dt.gaokao_recall_score()
+dt.gaokao_recall_score()
 # print('正在执行：  ajor_career_detail')
 # dt.major_career_detail()
 # print('正在执行：  ajor_split')

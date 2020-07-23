@@ -103,14 +103,14 @@ def download_page_university_detail(url, **kargs):
         "sch_id": kargs['sch_id']}
     for c in cookies:
         cookie_jar.set(c['name'], c['value'], domain="wmzy.com")
-    page = requests.get(url, cookies=cookie_jar,  json=payload)
+    page = requests.get(url, cookies=cookie_jar, json=payload)
     soup = BeautifulSoup(page.text, 'html.parser', from_encoding='utf-8')
     soup_done_index = soup.text.find('{"props')
-    if soup_done_index!=-1:
+    if soup_done_index != -1:
         soup_done = soup.text[soup_done_index:]
         site_json = json.loads(soup_done)
         result = site_json['props']['pageProps']['schoolInfor']
-        if int(kargs['page_num'])%100==0:
+        if int(kargs['page_num']) % 100 == 0:
             print('进度：:', kargs['page_num'])
         return result
     else:
@@ -407,7 +407,7 @@ def spider_all_university_detail(inter):
         id = one_data['sch_id']
         one_data['page_num'] = i
         result = download_page_university_detail(
-            'https://www.wmzy.com/web/school?sch_id=' + id+'&tab=0',
+            'https://www.wmzy.com/web/school?sch_id=' + id + '&tab=0',
             **one_data)
         result_f.append({'sch_id': id, 'result': result})
     return result_f
