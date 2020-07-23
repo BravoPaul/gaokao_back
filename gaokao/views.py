@@ -1,11 +1,13 @@
 from django.shortcuts import get_object_or_404, render
-from .models import School, SchoolList, SchoolDetail, SchoolScore
+from .models import School, SchoolList, SchoolDetail, SchoolScore, Major
 from django.http import HttpResponse
 from django.core import serializers
 from itertools import chain
 from django.db.models import Count
 from .recommend import Recommend
 import json
+import pandas as pd
+import sqlite3
 
 
 # Create your views here.
@@ -36,6 +38,52 @@ def list(request):
     return HttpResponse(result_final, content_type="application/json")
 
 
+def major_list(request):
+    cnx = sqlite3.connect('db.sqlite3')
+    df_sch_major = pd.read_sql_query("SELECT * FROM gaokao_major", cnx)
+    code_major_1 = df_sch_major[['sid', 'sname']].drop_duplicates().rename(columns={'sid': 'code', 'sname': 'name'})
+    code_major_2 = df_sch_major[['cid', 'cname']].drop_duplicates().rename(columns={'cid': 'code', 'cname': 'name'})
+    code_major_3 = df_sch_major[['mid', 'mname']].drop_duplicates().rename(columns={'mid': 'code', 'mname': 'name'})
+    code_major = pd.concat([code_major_1, code_major_2, code_major_3])
+    dict_code_name = {}
+    for index, one_data in code_major.iterrows():
+        dict_code_name[one_data['code']] = one_data['name']
+
+    df_sch_s_grp = df_sch_major.groupby(['sid', 'sname'])['cid'].agg(
+        [('c_id_list','unique')]).reset_index()
+
+    df_sch_c_grp = df_sch_major.groupby(['cid', 'cname'])['mid'].agg(
+        [('m_id_list','unique')]).reset_index()
+
+
+    result_dict_c = {}
+
+    for index, row in df_sch_c_grp.iterrows():
+        result_tmp = []
+        for one_data in row['m_id_list']:
+            tmp_dict = {}
+            tmp_dict['code'] = one_data
+            tmp_dict['name'] = dict_code_name[one_data]
+            result_tmp.append(tmp_dict)
+        result_dict_c[row['cid']] = result_tmp
+
+    result_dict_s = []
+    for index, row in df_sch_s_grp.iterrows():
+        tmp_data = {}
+        tmp_data['code'] = row['sid']
+        tmp_data['name'] = row['sname']
+        result_tmp = []
+        for one_data in row['c_id_list']:
+            tmp_dict = {}
+            tmp_dict['code'] = one_data
+            tmp_dict['name'] = dict_code_name[one_data]
+            tmp_dict['major_3'] = result_dict_c[one_data]
+            result_tmp.append(tmp_dict)
+        tmp_data['major_2'] = result_tmp
+        result_dict_s.append(tmp_data)
+    response = json.dumps(result_dict_s)
+    return HttpResponse(response, content_type="application/json")
+
 
 def searchlist(request):
     result_sch_list = []
@@ -44,14 +92,13 @@ def searchlist(request):
     result_list = School.objects.all()
 
     for one_school in result_list:
-        if one_school.sch_name==sch_name:
+        if one_school.sch_name == sch_name:
             result_one_true.append(one_school)
-        elif one_school.sch_name.find(sch_name)>=0:
+        elif one_school.sch_name.find(sch_name) >= 0:
             result_sch_list.append(one_school)
-    result_final = result_one_true+result_sch_list
+    result_final = result_one_true + result_sch_list
     result_final = serializers.serialize('json', result_final)
     return HttpResponse(result_final, content_type="application/json")
-
 
 
 def detail(request):
@@ -164,7 +211,7 @@ def recommend(request):
     result_sort = {}
 
     for key, values in result.items():
-        result_sort[key] = sorted(values,key=lambda k: k['probability'])
+        result_sort[key] = sorted(values, key=lambda k: k['probability'])
 
     response = json.dumps(result_sort)
 
@@ -173,3 +220,4 @@ def recommend(request):
     return HttpResponse(response, content_type="application/json")
 
 
+major_list(1)
