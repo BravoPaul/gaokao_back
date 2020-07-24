@@ -419,7 +419,7 @@ class DataTraitor(object):
                     df_min = data_grp_1[['sch_id', 'min_score_rank', 'avg_score_rank']].droplevel(0, axis=1).rename(
                         columns={'': 'sch_id'}).sort_values(by=['mean'])
 
-                    for rank in set(df_min['max'].values.tolist()):
+                    for rank in set(df_max['min'].values.tolist()):
                         sch_max = df_max[df_max['min'] >= rank]['sch_id'].values.tolist()
                         sch_min = df_min[df_min['max'] < rank]['sch_id'].values.tolist()
                         all_school = set(df_max['sch_id'].values.tolist())

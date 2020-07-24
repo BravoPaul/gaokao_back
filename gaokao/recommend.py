@@ -3,7 +3,7 @@
 from gaokao.models import GaokaoMetaRank, School, GaokaoRecallScore, GaokaoRecallRank, GaokaoMetaScoreLine, SchoolMajor, \
     MajorSplit, ModelRuleResult
 
-
+# @TODO 会出现个别专业分数低于学校最低分数的情况
 class Recommend(object):
 
     # 专业改名字了怎么办
@@ -284,8 +284,10 @@ class Recommend(object):
         '''
         recall_data = GaokaoRecallRank.objects.filter(
             province_id=province_id,
-            wenli=wenli
+            wenli=wenli,
+            rank__lte=rank
         )
+
 
 
 
