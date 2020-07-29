@@ -222,7 +222,7 @@ def download_page_school_score(url, **kargs):
     newHeaders = {'Accept': 'application/json'
         , 'Accept-Encoding': 'gzip, deflate, br'
         , 'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
-        , 'Authorization': '4147430 Fqag82U0gf2JqIN8bJfzptWQLX4zX1hwqpao4VJRFjLhwYGpQrLe9W862e0R62+6'
+        , 'Authorization': '4147430 Fqag82U0gf2JqIN8bJfzphzL4nzAkXx2MoLm6pmfQCbXY/W0B+4AK/teTvAbIXnF'
         , 'Channel': 'www.wmzy.com pc'
         , 'Connection': 'keep-alive'
         , 'Content-Length': '221'
@@ -256,7 +256,7 @@ def download_page_major_score(url, **kargs):
     newHeaders = {'Accept': 'application/json'
         , 'Accept-Encoding': 'gzip, deflate, br'
         , 'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
-        , 'Authorization': '4147430 Fqag82U0gf2JqIN8bJfzptWQLX4zX1hwqpao4VJRFjLhwYGpQrLe9W862e0R62+6'
+        , 'Authorization': '4147430 Fqag82U0gf2JqIN8bJfzphzL4nzAkXx2MoLm6pmfQCbXY/W0B+4AK/teTvAbIXnF'
         , 'Channel': 'www.wmzy.com pc'
         , 'Connection': 'keep-alive'
         , 'Content-Length': '221'
@@ -603,9 +603,9 @@ def main():
     # 学校和分数类爬虫
     # mul_thread_run(spider_all_university_index)
     # print('爬虫 spider_all_university_detail')
-    mul_thread_run(spider_all_university_detail)
-    # print('爬虫 spider_all_school_score')
-    # mul_thread_run(spider_all_school_score)
+    # mul_thread_run(spider_all_university_detail)
+    print('爬虫 spider_all_school_score')
+    mul_thread_run(spider_all_school_score)
     # print('爬虫 spider_all_major_score')
     # mul_thread_run(spider_all_major_score)
 
