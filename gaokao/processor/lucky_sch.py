@@ -65,7 +65,6 @@ def show_result(df):
     school['985'] = school['sch_tags'].map(lambda x: '985' if str(x).find('985') >= 0 else '')
     result = pd.merge(school, df, left_on='sch_id', right_on='school_id')
     result = result.drop(['sch_tags', 'sch_id'], axis=1)
-    result = result.sort_values(by=['academic_year', 'diff_score'], ascending=False)
     return result
 
 
@@ -103,12 +102,31 @@ def school_enroll_ana(wenli, batch_name):
     df_trait = df_trait.sort_values(by=['school_id', 'academic_year'])
     df_trait['enroll_last'] = df_trait.groupby(['school_id'])['enroll_plan_count'].shift()
     df_trait['min_rank_last'] = df_trait.groupby(['school_id'])['min_score_rank'].shift()
+
+    df_trait['enroll_last_2'] = df_trait.groupby(['school_id'])['enroll_plan_count'].shift(2)
+    df_trait['min_rank_last_2'] = df_trait.groupby(['school_id'])['min_score_rank'].shift(2)
+
     df_trait = df_trait.dropna(subset=['enroll_last', 'min_rank_last'])
+    df_trait = df_trait.fillna(-1)
     df_trait['enroll_diff_percent'] = df_trait.apply(
         lambda x: (int(x['enroll_plan_count']) - int(x['enroll_last'])) / int(x['enroll_last']), axis=1)
     df_trait['min_rank_percent'] = df_trait.apply(
         lambda x: (int(x['min_score_rank']) - int(x['min_rank_last'])) / int(x['min_rank_last']), axis=1)
+    df_trait['enroll_diff_percent_2'] = df_trait.apply(
+        lambda x: (int(x['enroll_plan_count']) - int(x['enroll_last_2'])) / int(x['enroll_last_2']), axis=1)
+    df_trait['min_rank_percent_2'] = df_trait.apply(
+        lambda x: (int(x['min_score_rank']) - int(x['min_rank_last_2'])) / int(x['min_rank_last_2']), axis=1)
     return df_trait
+
+
+def sch_enroll_predict(wenli):
+    df_trait = df_sch_major[df_sch_major['wenli'] == wenli]
+    df_trait['enroll_plan_count'] = df_trait['enroll_plan_count'].map(int)
+    df_trait_grp = df_trait.groupby(['school_id', 'academic_year'])['enroll_plan_count'].sum().reset_index()
+    df_trait_grp['enroll_last_year'] = df_trait_grp.groupby(['school_id'])['enroll_plan_count'].shift()
+    df_trait_grp['enroll_diff'] = (df_trait_grp['enroll_plan_count'] - df_trait_grp['enroll_last_year']) / df_trait_grp[
+        'enroll_last_year']
+    return df_trait_grp
 
 
 def plot_rank(wenli, academic_year):
@@ -176,8 +194,18 @@ def main_sch_lucky():
 def main_school_enroll_ana():
     result = school_enroll_ana('2', '本科第一批')
     result = pd.merge(school[['sch_id', 'sch_name']], result, left_on='sch_id', right_on='school_id')
-    result.to_sql('main_school_enroll_ana', con=cnx_2, if_exists='replace')
+    result_final = result[[
+        'school_id', 'sch_name', 'academic_year', 'avg_score_rank', 'min_score_rank', 'min_rank_last',
+        'min_rank_last_2', 'enroll_plan_count', 'enroll_last', 'enroll_last_2', 'min_rank_percent',
+        'min_rank_percent_2', 'enroll_diff_percent', 'enroll_diff_percent_2']]
+    result_final.to_sql('main_school_enroll_ana', con=cnx_2, if_exists='replace')
+
+
+def main_school_enroll_predict():
+    result = sch_enroll_predict('2')
+    result_predict = show_result(result)
+    result_predict.to_sql('main_school_enroll_predict', con=cnx_2, if_exists='replace')
 
 
 if __name__ == '__main__':
-    main_school_enroll_ana()
+    main_school_enroll_predict()

@@ -1,10 +1,3 @@
-# update sqlite_sequence set seq = 0 where name = 'gaokao_schooldetail';
-# delete from sqlite_sequence where name = 'gaokao_schooldetail';
-# delete from sqlite_sequence;
-
-# python manage.py shell < /Users/kunyue/project_personal/my_project/mysite/gaokao/processor/data_traitor.py
-
-
 class DataTraitor(object):
     def __init__(self):
         import sqlite3
@@ -890,10 +883,10 @@ dt = DataTraitor()
 # dt.university_save_sqlite()
 # print('正在执行：  university_detail_sqlite')
 # dt.university_detail_sqlite()
-print('正在执行：  niversity_score_sqlite')
+print('正在执行： university_score_sqlite')
 dt.university_score_sqlite()
-# print('正在执行：  niversity_major_sqlite')
-# dt.university_major_sqlite()
+print('正在执行： university_major_sqlite')
+dt.university_major_sqlite()
 # print('正在执行：  niversity_schoollist_sqlite')
 # dt.university_schoollist_sqlite()
 # print('正在执行：  gaokao_meta_rank')

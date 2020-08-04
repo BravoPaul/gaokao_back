@@ -188,7 +188,7 @@ def download_page_index(url, **kargs):
     newHeaders = {'Accept': 'application/json'
         , 'Accept-Encoding': 'gzip, deflate, br'
         , 'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
-        , 'Authorization': '4147430 Fqag82U0gf2JqIN8bJfzptWQLX4zX1hwqpao4VJRFjLhwYGpQrLe9W862e0R62+6'
+        , 'Authorization': '4147430 Fqag82U0gf2JqIN8bJfzphzL4nzAkXx2MoLm6pmfQCbXY/W0B+4AK/teTvAbIXnF'
         , 'Channel': 'www.wmzy.com pc'
         , 'Connection': 'keep-alive'
         , 'Content-Length': '221'
@@ -205,7 +205,7 @@ def download_page_index(url, **kargs):
     cookie_jar = RequestsCookieJar()
     # batch控制一批还是二批，diploma_id控制本科还是专科
     payload = {"sch_id": "" + kargs['sch_id'] + "", "stu_province_id": "130000000000",
-               "enroll_unit_id": "" + kargs['sch_id'] + "", "enroll_adm_type": 2}
+               "enroll_unit_id": "" + kargs['sch_id'] + "", "enroll_adm_type": 1}
     for c in cookies:
         cookie_jar.set(c['name'], c['value'], domain="wmzy.com")
     page = requests.post(url, cookies=cookie_jar, headers=newHeaders, json=payload)
@@ -601,13 +601,14 @@ def mul_thread_run(func):
 def main():
     # thread
     # 学校和分数类爬虫
-    # mul_thread_run(spider_all_university_index)
+    print('爬虫 spider_all_university_index')
+    mul_thread_run(spider_all_university_index)
     # print('爬虫 spider_all_university_detail')
     # mul_thread_run(spider_all_university_detail)
     print('爬虫 spider_all_school_score')
     mul_thread_run(spider_all_school_score)
-    # print('爬虫 spider_all_major_score')
-    # mul_thread_run(spider_all_major_score)
+    print('爬虫 spider_all_major_score')
+    mul_thread_run(spider_all_major_score)
 
     # 专业类爬虫
     # print('爬虫 spider_major_list')
@@ -621,7 +622,7 @@ def main():
 if __name__ == '__main__':
     main()
     # sp = SpiderData()
-    # data = sp.get_university_index_compare(university_name='青岛滨海学院')
+    # data = sp.get_university_index(university_name='北京大学')
 
     # get_university_index(university_name='河北科技大学')
 

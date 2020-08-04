@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render
-from .models import School, SchoolList, SchoolDetail, SchoolScore, Major
+from .models import School, SchoolList
 from django.http import HttpResponse
 from django.core import serializers
 from itertools import chain

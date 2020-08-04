@@ -1,7 +1,6 @@
 # python manage.py shell < /Users/kunyue/project_personal/my_project/mysite/gaokao/recommend.py
 
-from gaokao.models import GaokaoMetaRank, School, GaokaoRecallScore, GaokaoRecallRank, GaokaoMetaScoreLine, SchoolMajor, \
-    MajorSplit, ModelRuleResult
+from gaokao.models import GaokaoRecallRank,  ModelRuleResult
 
 # @TODO 会出现个别专业分数低于学校最低分数的情况
 class Recommend(object):
